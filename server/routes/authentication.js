@@ -1,3 +1,5 @@
+const express = require('express');
+const router = express.Router();
 const jwt = require('jwt-simple');
 const User = require('../models/user');
 const config = require('../config');
@@ -7,7 +9,7 @@ function tokenForUser(user) {
   return jwt.encode({ sub: user.id, iat: timestamp }, config.secret);
 };
 
-exports.signup = function(req, res, next) {
+router.post('/signup', function(req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
 
@@ -38,4 +40,6 @@ exports.signup = function(req, res, next) {
       res.json({ token: tokenForUser(user) });
     }); 
   });
-}
+});
+
+module.exports = router;
