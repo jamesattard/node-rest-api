@@ -16,11 +16,6 @@ app.use(bodyParser.json());
 // Initialise routes
 app.use('/', require('./routes/authentication'));
 
-// Error handling middleware
-app.use(function(err, req, res, next){
-  res.status(422).send({error: err._message})
-});
-
 // Server Setup
 const port = process.env.PORT || 3090;
 app.listen(port, function() {
