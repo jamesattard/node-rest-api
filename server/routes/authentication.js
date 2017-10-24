@@ -7,7 +7,7 @@ const passportService = require('../services/passport');
 const passport = require('passport');
 
 const requireAuth = passport.authenticate('jwt', { session: false });
-
+const requireSignin = passport.authenticate('local', {session: false});
 
 function tokenForUser(user) {
   const timestamp = new Date().getTime();
@@ -18,8 +18,18 @@ function tokenForUser(user) {
 // AUTH ROUTES
 // -----------
 
+// Handle a protected route
 router.get('/', requireAuth, function(req, res){
   res.send({hi: 'there'});
+});
+
+// Handle signin
+router.post('/signin', requireSignin, function(req, res, next) {
+  // User has already had their email and password auth'd
+  // We just need to give them a token
+  // Luckily passport's done callback gives us an instance
+  // of the user model as req.user
+  res.send({ token: tokenForUser(req.user) });
 });
 
 // Handle signup
