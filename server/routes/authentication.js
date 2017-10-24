@@ -3,12 +3,26 @@ const router = express.Router();
 const jwt = require('jwt-simple');
 const User = require('../models/user');
 const config = require('../config');
+const passportService = require('../services/passport');
+const passport = require('passport');
+
+const requireAuth = passport.authenticate('jwt', { session: false });
+
 
 function tokenForUser(user) {
   const timestamp = new Date().getTime();
   return jwt.encode({ sub: user.id, iat: timestamp }, config.secret);
 };
 
+// -----------
+// AUTH ROUTES
+// -----------
+
+router.get('/', requireAuth, function(req, res){
+  res.send({hi: 'there'});
+});
+
+// Handle signup
 router.post('/signup', function(req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
